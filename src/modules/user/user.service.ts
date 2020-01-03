@@ -3,9 +3,9 @@ import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseService } from '../_shared/services/base.service';
-import * as bcrypt from 'bcryptjs';
-import * as crypto from 'crypto';
 import { EmailService } from '../_shared/services/email.service';
+import { Hash } from '../_shared/utils/hash';
+import { AuthLoginDTO } from '../auth/DTO/auth-login.DTO';
 
 @Injectable()
 export class UserService extends BaseService{
@@ -13,7 +13,6 @@ export class UserService extends BaseService{
     constructor(
         @InjectRepository(User)
         private readonly userRepo: Repository<User>,
-        // private readonly mailerService: MailerService
     ){
         super();
     }
@@ -22,14 +21,29 @@ export class UserService extends BaseService{
         return await this.userRepo.find();
     }
 
+    async login(data: Partial<AuthLoginDTO>): Promise<User>{
+        const user = await this.findUserByEmail(data.username, false);
+        if(user && user.isActive){
+            if(await Hash.match(data.password, user.password)){
+                return user;
+            }
+            else{
+                return null;
+            }
+        }
+        else{
+            return null;
+        }
+    }
+
 	async create(data: Partial<User>): Promise<User>{
         if(data?.password){
-            data.password = await bcrypt.hash(data.password, bcrypt.genSaltSync(10))
+            data.password = await Hash.create(data.password);
         }
 
         data.isActive = false;
         data.isConfirmed = false;
-        data.confirmationToken = crypto.createHash('sha1').update((new Date()).valueOf().toString() + Math.random().toString()).digest('hex');
+        data.confirmationToken = Hash.createRandomSha1Hash();
 
         const user = await this.userRepo.create(data);
         await this.userRepo.save(user);
@@ -55,9 +69,19 @@ export class UserService extends BaseService{
         }
     }
 
+    async validateRecoverToken(token: string): Promise<User>{
+        return await this.userRepo.findOne({
+            recoverToken: token,
+            isActive: true,
+            isConfirmed: true
+        });
+    }
+
     async emailAddressExists(email: string): Promise<boolean>{
         const user = await this.userRepo.findOne({
-            email
+            email,
+            isActive: true,
+            isConfirmed: true
         });
 
         if(user){
@@ -68,10 +92,42 @@ export class UserService extends BaseService{
         }
     }
 
+    async findUserByEmail(email: string, considerConfirmed: boolean = true, considerActive: boolean = true): Promise<User>{
+        let criteria:any = {
+            email
+        };
+
+        if(considerConfirmed){
+            criteria.isConfirmed = true;
+        }
+
+        if(considerActive){
+            criteria.isActive = true;
+        }
+
+
+        return await this.userRepo.findOne(criteria);
+    }
+
     async confirmUser(user: User): Promise<User>{ 
         user.confirmationToken = null;
         user.isActive = true;
         user.isConfirmed = true;       
+        return await this.userRepo.save(user);
+    }
+
+    async generateRecoverCode(user: User): Promise<boolean>{
+        user.recoverToken = Hash.createRandomSha1Hash();
+        await this.userRepo.save(user);
+
+        this.sendRecoverEmail(user);
+
+        return true;
+    }
+
+    async setNewPassword(user:User, password: string): Promise<User>{
+        user.recoverToken = null;     
+        user.password = await Hash.create(password);
         return await this.userRepo.save(user);
     }
 
@@ -83,6 +139,21 @@ export class UserService extends BaseService{
             to: user.email,
             subject: 'Confirm your email',
             template: 'ev_ms_confirmation_email',
+            'v:name': user.firstName,
+            'v:link': link
+        });
+
+        return;
+    }
+
+    async sendRecoverEmail(user: User): Promise<void>{
+
+        const link:string = process.env.APP_AUTH_RECOVER_PASSWORD_URI + '?code=' + user.recoverToken;
+
+        EmailService.sendMail({
+            to: user.email,
+            subject: 'Recover your password',
+            template: 'ev_ms_recover_password_email',
             'v:name': user.firstName,
             'v:link': link
         });
