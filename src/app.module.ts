@@ -1,22 +1,22 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import * as ormconfig from './ormconfig';
-import { AuthModule } from './modules/auth/auth.module';
-import { UserModule } from './modules/user/user.module';
+import { DynamicModule , Module } from '@nestjs/common';
+import { ConfigModule }           from '@nestjs/config';
+import { TypeOrmModule }          from '@nestjs/typeorm';
+import * as ormconfig             from './ormconfig';
+import LoadModules                from './modules';
 
+// read all module folders and load all available modules
+const modules: DynamicModule [] = LoadModules();
+
+// @ts-ignore
 @Module({
   imports: [
     ConfigModule.forRoot(),
 
-    // Database Settings    
+    // Database Settings
     TypeOrmModule.forRootAsync({
-      useFactory: async () => ormconfig
+      useFactory: async () => ormconfig,
     }),
-
-    // Modules
-    AuthModule, 
-    UserModule
+    ...modules,
   ],
   // controllers: [],
 })

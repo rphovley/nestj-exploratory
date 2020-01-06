@@ -1,9 +1,9 @@
 import { Controller, Post, HttpCode, Body, Get, Param, Patch } from '@nestjs/common';
-import { BaseController } from '../_shared/controllers/base.controller';
-import { UserSaveDTO } from './DTO/user-save.DTO';
-import { UserService } from './user.service';
-import { User } from './user.entity';
-import { UserNewPasswordDTO } from './DTO/user-newpassword.DTO';
+import { BaseController }                                      from '../_shared/controllers/base.controller';
+import { UserSaveDto }                                         from './dto/user-save.dto';
+import { UserNewPasswordDto }                                  from './dto/user-newpassword.dto';
+import { UserService }                                         from './user.service';
+import { User }                                                from './user.entity';
 
 @Controller('user')
 export class UserController extends BaseController{
@@ -17,7 +17,7 @@ export class UserController extends BaseController{
     @Post()
     @HttpCode(201)
     async create(
-        @Body() data: UserSaveDTO,      
+        @Body() data: UserSaveDto,
     ): Promise<User>{
         return await this.userService.create(data);
     }
@@ -63,7 +63,7 @@ export class UserController extends BaseController{
     @HttpCode(200)
     async setNewPassword(
         @Param('code') code:string,
-        @Body() data:UserNewPasswordDTO
+        @Body() data:UserNewPasswordDto
     ): Promise<boolean>{
         const user = await this.userService.validateRecoverToken(code);
         if(user){

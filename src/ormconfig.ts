@@ -1,8 +1,7 @@
-import {ConnectionOptions} from 'typeorm';
+import { ConnectionOptions } from 'typeorm';
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
-const data: any = dotenv.parse(fs.readFileSync(`.env`));
-
+const data: any = dotenv.parse(fs.readFileSync('.env'));
 
 // Check typeORM documentation for more information.
 const config: ConnectionOptions = {
@@ -19,14 +18,14 @@ const config: ConnectionOptions = {
 	
 	// Run migrations automatically,
 	// you can disable this if you prefer running migration manually.
-	migrationsRun: true,
+	migrationsRun: false,
 	logging: Boolean(data.DATABASE_LOGGING),
 	logger: 'file',
 	
 	// Allow both start:prod and start:dev to use migrations
 	// __dirname is either dist or src folder, meaning either
 	// the compiled js in prod or the ts in dev.
-	migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
+	migrations: [`${__dirname}/migrations/**/*{.ts,.js}`],
 	cli: {
 		// Location of migration should be inside src folder
 		// to be compiled into dist/ folder.
