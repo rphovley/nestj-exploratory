@@ -1,6 +1,4 @@
 import { Injectable, UnauthorizedException, CanActivate, ExecutionContext } from "@nestjs/common";
-import { UserService } from "src/modules/user/user.service";
-import { AuthLoginDTO } from "src/modules/auth/DTO/auth-login.DTO";
 import { User } from "src/modules/user/user.entity";
 import { Observable } from "rxjs";
 import { Session } from "src/modules/_shared/utils/session";

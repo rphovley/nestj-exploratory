@@ -1,7 +1,7 @@
-import { Controller, HttpCode, Post, Body, HttpException, HttpStatus, Get, UseGuards, Request, All } from '@nestjs/common';
+import { Controller, HttpCode, Post, Body, HttpException, HttpStatus, Get, UseGuards, Request } from '@nestjs/common';
 import { BaseController } from '../_shared/controllers/base.controller';
 import { UserService } from '../user/user.service';
-import { AuthLoginDTO } from './DTO/auth-login.DTO';
+import { AuthLoginDto } from './dto/auth-login.dto';
 import { User } from '../user/user.entity';
 import { Session } from '../_shared/utils/session';
 import { LocalPassportGuard } from 'src/guards/local-passport.guard';
@@ -19,7 +19,7 @@ export class AuthController extends BaseController{
     @Post('login')
     @HttpCode(200)
     async create(
-        @Body() data: AuthLoginDTO,      
+        @Body() data: AuthLoginDto,      
     ): Promise<User>{
         const user = await this.userService.login(data);
         if(user){

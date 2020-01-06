@@ -1,7 +1,6 @@
 import nodemailer from 'nodemailer';
 import mg from 'nodemailer-mailgun-transport';
 import { Injectable } from '@nestjs/common';
-import { reject } from 'bluebird';
 
 @Injectable()
 export class EmailService{

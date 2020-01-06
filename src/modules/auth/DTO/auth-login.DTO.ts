@@ -1,6 +1,7 @@
 import { IsNotEmpty, IsEmail } from "class-validator";
 
-export class AuthLoginDTO {    
+
+export class AuthLoginDto {    
     
     @IsNotEmpty()
     @IsEmail()
@@ -9,7 +10,7 @@ export class AuthLoginDTO {
     @IsNotEmpty()
     password:string;
 
-    constructor(partial: Partial<AuthLoginDTO>) {
+    constructor(partial: Partial<AuthLoginDto>) {
 		Object.assign(this, partial);
 	}
 }

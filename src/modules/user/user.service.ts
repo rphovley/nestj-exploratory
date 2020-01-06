@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { BaseService } from '../_shared/services/base.service';
 import { EmailService } from '../_shared/services/email.service';
 import { Hash } from '../_shared/utils/hash';
-import { AuthLoginDTO } from '../auth/DTO/auth-login.DTO';
+import { AuthLoginDto } from '../auth/dto/auth-login.dto';
 import { Session } from '../_shared/utils/session';
 import { Serialize } from '../_shared/utils/serialize';
 
@@ -25,7 +25,7 @@ export class UserService extends BaseService{
         return await this.userRepo.find();
     }
 
-    async login(data: Partial<AuthLoginDTO>): Promise<User>{
+    async login(data: Partial<AuthLoginDto>): Promise<User>{
         const user = await this.findUserByEmail(data.username, false);
         if(user && user.isActive){
             if(await Hash.match(data.password, user.password)){
