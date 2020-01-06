@@ -11,7 +11,7 @@ const config: ConnectionOptions = {
 	port: Number(data.DATABASE_PORT),
 	username: data.DATABASE_USER,
 	password: data.DATABASE_PASSWORD,
-	database: 'ms-auth',
+	database: data.DATABASE_DBNAME,
 	entities: [__dirname + '/**/*.entity{.ts,.js}'],
 	
 	// We are using migrations, synchronize should be set to false.
@@ -26,7 +26,7 @@ const config: ConnectionOptions = {
 	// Allow both start:prod and start:dev to use migrations
 	// __dirname is either dist or src folder, meaning either
 	// the compiled js in prod or the ts in dev.
-	migrations: [__dirname + 'src/migrations/**/*{.ts,.js}'],
+	migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
 	cli: {
 		// Location of migration should be inside src folder
 		// to be compiled into dist/ folder.

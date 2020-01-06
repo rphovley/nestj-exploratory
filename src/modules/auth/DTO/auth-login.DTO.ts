@@ -8,4 +8,8 @@ export class AuthLoginDTO {
     
     @IsNotEmpty()
     password:string;
+
+    constructor(partial: Partial<AuthLoginDTO>) {
+		Object.assign(this, partial);
+	}
 }

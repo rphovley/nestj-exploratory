@@ -35,7 +35,7 @@ export class UserController extends BaseController{
     async recoverPassword(
         @Param('email') email:string
     ): Promise<boolean>{
-        const validEmail = this.userService.emailAddressExists(email);
+        const validEmail = await this.userService.emailAddressExists(email);
         if(validEmail){
             this.userService.generateRecoverCode(await this.userService.findUserByEmail(email));
             return true;

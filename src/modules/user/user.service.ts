@@ -6,6 +6,8 @@ import { BaseService } from '../_shared/services/base.service';
 import { EmailService } from '../_shared/services/email.service';
 import { Hash } from '../_shared/utils/hash';
 import { AuthLoginDTO } from '../auth/DTO/auth-login.DTO';
+import { Session } from '../_shared/utils/session';
+import { Serialize } from '../_shared/utils/serialize';
 
 @Injectable()
 export class UserService extends BaseService{
@@ -13,6 +15,8 @@ export class UserService extends BaseService{
     constructor(
         @InjectRepository(User)
         private readonly userRepo: Repository<User>,
+        private readonly session: Session,
+        private readonly serialize: Serialize
     ){
         super();
     }
@@ -105,7 +109,6 @@ export class UserService extends BaseService{
             criteria.isActive = true;
         }
 
-
         return await this.userRepo.findOne(criteria);
     }
 
@@ -129,6 +132,15 @@ export class UserService extends BaseService{
         user.recoverToken = null;     
         user.password = await Hash.create(password);
         return await this.userRepo.save(user);
+    }
+
+    authenticateSession(user: User): void{
+        const userAuthenticationData = this.serialize.serialize(user);
+        this.session.store('user-auth', userAuthenticationData);
+    }
+
+    logout(): void{
+        this.session.destroy('user-auth');
     }
 
     async sendConfirmationEmail(user: User): Promise<void>{
