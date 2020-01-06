@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, Generated, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { Exclude } from 'class-transformer';
+import { Exclude } 																				 from 'class-transformer';
 
 @Entity()
 export class User {
@@ -47,7 +47,7 @@ export class User {
     @UpdateDateColumn()
 	updatedAt: Date;
 	
-	constructor(partial: Partial<User>) {
+	constructor(partial?: Partial<User>) {
 		Object.assign(this, partial);
 	}
 }
