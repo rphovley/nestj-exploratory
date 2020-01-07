@@ -3,5 +3,10 @@
   "extends": ["tslint-config-airbnb"],
   "jsRules": {
     "no-unused-expression": true
+  },
+  "linterOptions": {
+    "exclude": [
+      "src/migrations"
+    ]
   }
 }
