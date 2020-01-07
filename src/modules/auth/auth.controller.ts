@@ -15,7 +15,9 @@ import { AuthLoginDto } from './dto/auth-login.dto';
 import { User } from '../user/user.entity';
 import { Session } from '../_shared/utils/session';
 import { LocalPassportGuard } from 'src/guards/local-passport.guard';
+import { ApiTags, ApiOkResponse, ApiBasicAuth } from '@nestjs/swagger';
 
+@ApiTags('Authentication')
 @Controller('auth')
 export class AuthController extends BaseController {
   constructor(
@@ -27,6 +29,10 @@ export class AuthController extends BaseController {
 
   @Post('login')
   @HttpCode(200)
+  @ApiOkResponse({
+    type: User,
+    description: 'The user has logged in',
+  })
   async create(@Body() data: AuthLoginDto): Promise<User> {
     const user = await this.userService.login(data);
     if (user) {
@@ -51,6 +57,11 @@ export class AuthController extends BaseController {
   @UseGuards(LocalPassportGuard)
   @Get('me')
   @HttpCode(200)
+  @ApiOkResponse({
+    type: User,
+    description: 'Get the logged in user information',
+  })
+  @ApiBasicAuth()
   async me(@Request() req): Promise<User> {
     return new User(req.user);
   }
@@ -58,6 +69,10 @@ export class AuthController extends BaseController {
   @UseGuards(LocalPassportGuard)
   @Get('logout')
   @HttpCode(200)
+  @ApiOkResponse({
+    description: 'The user has been logged out',
+  })
+  @ApiBasicAuth()
   async logout(): Promise<boolean> {
     this.userService.logout();
     return true;
