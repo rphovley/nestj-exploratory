@@ -7,22 +7,8 @@ import { Session } from '../utils/session';
 import { Serialize } from '../utils/serialize';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([User]),
-    ],
-    exports: [
-        TypeOrmModule.forFeature([User]),
-        UserService,
-        Session,
-        Serialize
-    ],
-	providers: [
-        UserService,
-        LocalPassportGuard,
-        Session,
-        Serialize
-    ]
+  imports: [TypeOrmModule.forFeature([User])],
+  exports: [TypeOrmModule.forFeature([User]), UserService, Session, Serialize],
+  providers: [UserService, LocalPassportGuard, Session, Serialize],
 })
-export class BaseModule{
-
-}
+export class BaseModule {}
