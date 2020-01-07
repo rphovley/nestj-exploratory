@@ -9,44 +9,48 @@ import  localPassportGuard                                                      
 @Controller('auth')
 export class AuthController extends BaseController{
 
-  constructor(
+    constructor(
         private readonly session: Session,
-        private readonly userService: UserService,
-    ) {
-    super();
-  }
+        private readonly userService: UserService
+    ){
+        super();
+    }
 
   @Post('login')
-    @HttpCode(200)
-    async create(
-        @Body() data: AuthLoginDto,
-    ): Promise<User> {
+  @HttpCode(200)
+  async create(@Body() data: AuthLoginDto): Promise<User> {
     const user = await this.userService.login(data);
     if (user) {
-      if (user.isConfirmed === true) {
-        await this.userService.authenticateSession(user);
-        return user;
+      if (!user.isConfirmed) {
+        throw new HttpException(
+          `You need confirm your email address.
+          Please check your inbox and follow the instructions`,
+          HttpStatus.UNAUTHORIZED,
+        );
       }
 
-      throw new HttpException('You need confirm your email address. Please check your inbox and follow the instructions' , HttpStatus.UNAUTHORIZED);
-
+      await this.userService.authenticateSession(user);
+      return user;
+    } else {
+      throw new HttpException(
+        'Invalid username or password',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
-    throw new HttpException('Invalid username or password' , HttpStatus.UNAUTHORIZED);
   }
 
-  @UseGuards(localPassportGuard)
-    @Get('me')
-    @HttpCode(200)
-    async me(@Request() req): Promise<User> {
+  @UseGuards(LocalPassportGuard)
+  @Get('me')
+  @HttpCode(200)
+  async me(@Request() req): Promise<User> {
     return new User(req.user);
   }
 
-  @UseGuards(localPassportGuard)
-    @Get('logout')
-    @HttpCode(200)
-    async logout(): Promise<boolean> {
+  @UseGuards(LocalPassportGuard)
+  @Get('logout')
+  @HttpCode(200)
+  async logout(): Promise<boolean> {
     this.userService.logout();
     return true;
   }
-
 }
