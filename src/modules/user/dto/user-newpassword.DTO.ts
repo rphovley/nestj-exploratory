@@ -1,6 +1,6 @@
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty } from 'class-validator';
 
-export class UserNewPasswordDto{
-    @IsNotEmpty()
-    password: string;
+export class UserNewPasswordDto {
+  @IsNotEmpty()
+  password: string;
 }
