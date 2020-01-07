@@ -11,7 +11,6 @@ const modules: DynamicModule [] = LoadModules();
 @Module({
   imports: [
     ConfigModule.forRoot(),
-
     // Database Settings
     TypeOrmModule.forRootAsync({
       useFactory: async () => ormconfig,

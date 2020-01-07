@@ -5,7 +5,7 @@ import { DynamicModule }        from '@nestjs/common';
 export default function readDir(pathDir: string = __dirname): DynamicModule [] {
   return getDirectories(pathDir)
       .map(({ name }) => ({ dir: name, files: readdirSync(path.join(pathDir, name)) }))
-      .map(({ files, dir }) => ({ dir, files: getModuleFiles(files)}))
+      .map(({ files, dir }) => ({ dir, files: getModuleFiles(files) }))
       .map(({ files, dir }) => files.map(file => convertToDynamicModule(pathDir, dir, file)))
       .filter(module => module.length)
       .map(module => Object.values(module[0]))
