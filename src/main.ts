@@ -12,6 +12,7 @@ import fastifySession from 'fastify-session';
 import fastifyCookie from 'fastify-cookie';
 import connectRedis from 'connect-redis';
 import redis from 'redis';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -67,6 +68,15 @@ async function bootstrap() {
       secure: false,
     },
   });
+
+  // Swagger
+  const swaggerOptions = new DocumentBuilder()
+    .setTitle('Ursula API')
+    .setVersion('1.0')
+    .build();
+
+  const swaggerDocument = SwaggerModule.createDocument(app, swaggerOptions);
+  SwaggerModule.setup('swagger', app, swaggerDocument);
 
   await app.listen(3000);
 }

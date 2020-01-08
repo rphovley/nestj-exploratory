@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -62,7 +62,7 @@ export class UserService extends BaseService {
     });
 
     if (!user) {
-      return false;
+      throw new BadRequestException();
     }
 
     await this.confirmUser(user);
