@@ -16,6 +16,7 @@ import { User } from '../user/user.entity';
 import { Session } from '../_shared/utils/session';
 import { LocalPassportGuard } from 'src/guards/local-passport.guard';
 import { ApiTags, ApiOkResponse, ApiBasicAuth } from '@nestjs/swagger';
+import { LoggerService } from '../_shared/services/logger.service';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -23,6 +24,7 @@ export class AuthController extends BaseController {
   constructor(
     private readonly session: Session,
     private readonly userService: UserService,
+    private readonly loggerService: LoggerService,
   ) {
     super();
   }
