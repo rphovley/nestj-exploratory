@@ -13,6 +13,7 @@ import fastifyCookie from 'fastify-cookie';
 import connectRedis from 'connect-redis';
 import redis from 'redis';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { LoggerService } from './modules/_shared/services/logger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -22,6 +23,9 @@ async function bootstrap() {
       logger: process.env.SERVER_LOGGER,
     }),
   );
+
+  // Logger
+  app.useLogger(app.get(LoggerService));
 
   app.useGlobalPipes(
     new ValidationPipe({
