@@ -48,13 +48,23 @@ export class LoggerService extends Logger implements NestLoggerService {
   }
 
   private async registerOnAmazonCloudWatchLogs(
+    level: string,
     message: string,
   ): Promise<boolean> {
+
+    let requestMessage:string = `[${level.toLocaleUpperCase()}]`;
+    const user: User = this.getSessionLoggedUser();
+    if (user && user.id) {
+      requestMessage += `[LoggedUserID ${user.id}]`;
+    }
+
+    requestMessage += ` - ${message}`;
+
     return new Promise((resolve, reject) => {
       this.awsCloudWatchLogsInstance.createLogStream(
         {
           logGroupName: process.env.AWS_CLOUDWATCHLOGS_GROUPNAME,
-          logStreamName: message.replace(/:/g, '.').substring(0, 512),
+          logStreamName: requestMessage.replace(/:/g, '.').substring(0, 512),
         },
         (err, data) => {
           if (err) {
@@ -79,20 +89,15 @@ export class LoggerService extends Logger implements NestLoggerService {
   }
 
   info(message: any): void {
-    let authenticationInfo: string = '';
-    const user: User = this.getSessionLoggedUser();
-    if (user && user.id) {
-      authenticationInfo = `[LoggedUserID ${user.id}]`;
-    }
-
     this.registerOnAmazonCloudWatchLogs(
-      `[INFO] ${authenticationInfo} ${message}`,
+      'info',
+      `${message}`,
     );
   }
 
   error(message: string, trace?: string, context?: string) {
     super.error(message, trace, context);
-    this.registerOnAmazonCloudWatchLogs(`[ERROR] ${Date.now()} - ${message}`);
+    this.registerOnAmazonCloudWatchLogs('error', `${Date.now()} - ${message}`);
     this.logger.error(`${message} \n ${trace}`);
   }
 
