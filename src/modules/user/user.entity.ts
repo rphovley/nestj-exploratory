@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class User {
@@ -14,16 +15,20 @@ export class User {
   @Exclude()
   id: number;
 
+  @ApiProperty()
   @Column()
   @Generated('uuid')
   uuid: string;
 
+  @ApiProperty()
   @Column('varchar', { length: 255 })
   firstName: string;
 
+  @ApiProperty()
   @Column('varchar', { length: 255 })
   lastName: string;
 
+  @ApiProperty()
   @Column('varchar', { length: 255, unique: true })
   email: string;
 
@@ -47,9 +52,11 @@ export class User {
   @Exclude()
   recoverToken?: string;
 
+  @ApiProperty()
   @CreateDateColumn()
   createdAt: Date;
 
+  @ApiProperty()
   @UpdateDateColumn()
   updatedAt: Date;
 
