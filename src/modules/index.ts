@@ -17,7 +17,7 @@ function convertToDynamicModule(pathDir, dir, file) : DynamicModule {
 }
 
 function getModuleFiles(files: string []) : string [] {
-  return files.filter(file => file.endsWith('module.js'));
+  return files.filter(file => file.endsWith('module.ts') || file.endsWith('module.js'));
 }
 
 function getDirectories(path: string) : Dirent [] {

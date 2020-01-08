@@ -1,20 +1,17 @@
 import { Controller, HttpCode, Post, Body, HttpException, HttpStatus, Get, UseGuards, Request } from '@nestjs/common';
-import { BaseController }                                                                       from '../_shared/controllers/base.controller';
 import { UserService }                                                                          from '../user/user.service';
 import { AuthLoginDto }                                                                         from './dto/auth-login.dto';
 import { User }                                                                                 from '../user/user.entity';
 import { Session }                                                                              from '../_shared/utils/session';
-import  localPassportGuard                                                                      from 'src/guards/local-passport.guard';
+import  { LocalPassportGuard }                                                                  from '../../guards/local-passport.guard';
 
 @Controller('auth')
-export class AuthController extends BaseController{
-
-    constructor(
+export class AuthController {
+  constructor(
         private readonly session: Session,
-        private readonly userService: UserService
-    ){
-        super();
-    }
+        private readonly userService: UserService,
+    ) {
+  }
 
   @Post('login')
   @HttpCode(200)

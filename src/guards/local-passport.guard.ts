@@ -4,10 +4,10 @@ import {
   CanActivate,
   ExecutionContext,
 } from '@nestjs/common';
-import { User } from 'src/modules/user/user.entity';
+import { User } from '../modules/user/user.entity';
 import { Observable } from 'rxjs';
-import { Session } from 'src/modules/_shared/utils/session';
-import { Serialize } from 'src/modules/_shared/utils/serialize';
+import { Session } from '../modules/_shared/utils/session';
+import { Serialize } from '../modules/_shared/utils/serialize';
 
 @Injectable()
 export class LocalPassportGuard implements CanActivate {

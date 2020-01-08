@@ -1,9 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import {
-  FastifyAdapter,
-  NestFastifyApplication,
+    FastifyAdapter,
+    NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import { AppModule } from './app.module';
+import { AppModule } from '../../src/app.module';
 import { ValidationPipe } from '@nestjs/common';
 import fastifyCompress from 'fastify-compress';
 import fastifyHelmet from 'fastify-helmet';
@@ -16,18 +16,18 @@ import redis from 'redis';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter({
-      bodyLimit: +process.env.BODY_LIMIT,
-      logger: process.env.SERVER_LOGGER,
-    }),
-  );
+        AppModule,
+        new FastifyAdapter({
+          bodyLimit: +process.env.BODY_LIMIT,
+          logger: process.env.SERVER_LOGGER,
+        }),
+    );
 
   app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-    }),
-  );
+        new ValidationPipe({
+          transform: true,
+        }),
+    );
 
   app.register(fastifyRateLimit, {
     max: +process.env.MAX_RATE_REQUESTS,
@@ -46,7 +46,7 @@ async function bootstrap() {
   app.register(fastifyHelmet, { hidePoweredBy: true });
   app.register(fastifyCompress);
 
-  // Redis, Session and Cookies
+    // Redis, Session and Cookies
   const redisStoreInstance = connectRedis(fastifySession);
   const redisCli = redis.createClient();
   app.register(fastifyCookie);
@@ -62,7 +62,7 @@ async function bootstrap() {
       secure: false,
     },
   });
-  await app.listen(+process.env.SERVER_PORT);
+  return app;
 }
 
-bootstrap();
+export default bootstrap;

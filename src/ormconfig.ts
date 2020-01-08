@@ -1,10 +1,11 @@
-import { ConnectionOptions } from 'typeorm';
-import * as dotenv from 'dotenv';
-import * as fs from 'fs';
+import { ConnectionOptions }    from 'typeorm';
+import * as dotenv              from 'dotenv';
+import * as fs                  from 'fs';
+import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 const data: any = dotenv.parse(fs.readFileSync('.env'));
 
 // Check typeORM documentation for more information.
-const config: ConnectionOptions = {
+const config: TypeOrmModuleOptions = {
   type: 'postgres',
   host: data.DATABASE_HOST,
   port: Number(data.DATABASE_PORT),
@@ -12,7 +13,7 @@ const config: ConnectionOptions = {
   password: data.DATABASE_PASSWORD,
   database: data.DATABASE_DBNAME,
   entities: [`${__dirname}/**/*.entity{.ts,.js}`],
-
+  keepConnectionAlive: true,
   // We are using migrations, synchronize should be set to false.
   synchronize: false,
 
