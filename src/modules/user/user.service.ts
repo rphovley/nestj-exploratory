@@ -1,19 +1,19 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import { User } from './user.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { EmailService } from '../_shared/services/email.service';
-import { Hash } from '../_shared/utils/hash';
-import { AuthLoginDto } from '../auth/dto/auth-login.dto';
-import { Session } from '../_shared/utils/session';
-import { Serialize } from '../_shared/utils/serialize';
-import { LoggerService } from '../_shared/services/logger.service';
+import { User }                            from './user.entity';
+import { InjectRepository }                from '@nestjs/typeorm';
+import { EmailService }                    from '../_shared/services/email.service';
+import { Hash }                            from '../_shared/utils/hash';
+import { AuthLoginDto }                    from '../auth/dto/auth-login.dto';
+import { Session }                         from '../_shared/utils/session';
+import { Serialize }                       from '../_shared/utils/serialize';
+import { LoggerService }                   from '../_shared/services/logger.service';
+import { UserRepository }                  from './user.repository';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private readonly userRepo: Repository<User>,
+    private readonly userRepo: UserRepository,
     private readonly session: Session,
     private readonly serialize: Serialize,
     private readonly loggerService: LoggerService,

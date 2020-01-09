@@ -20,13 +20,12 @@ import { LoggerService } from '../_shared/services/logger.service';
 
 @ApiTags('Authentication')
 @Controller('auth')
-export class AuthController extends BaseController {
+export class AuthController {
   constructor(
     private readonly session: Session,
     private readonly userService: UserService,
     private readonly loggerService: LoggerService,
   ) {
-    super();
   }
 
   @Post('login')
