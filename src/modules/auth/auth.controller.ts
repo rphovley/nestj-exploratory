@@ -9,12 +9,12 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-import { BaseController } from '../_shared/controllers/base.controller';
+
 import { UserService } from '../user/user.service';
 import { AuthLoginDto } from './dto/auth-login.dto';
 import { User } from '../user/user.entity';
 import { Session } from '../_shared/utils/session';
-import { LocalPassportGuard } from 'src/guards/local-passport.guard';
+import { LocalPassportGuard } from '../../guards/local-passport.guard';
 import { ApiTags, ApiOkResponse, ApiBasicAuth } from '@nestjs/swagger';
 import { LoggerService } from '../_shared/services/logger.service';
 
