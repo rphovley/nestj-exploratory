@@ -4,5 +4,4 @@ import { LocalPassportGuard }                                                   
 
 @UseFilters(HttpExceptionFilter)
 @UseInterceptors(ClassSerializerInterceptor)
-@UseGuards(LocalPassportGuard)
 export abstract class BaseController {}

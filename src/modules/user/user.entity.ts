@@ -16,11 +16,6 @@ export class User {
   id: number;
 
   @ApiProperty()
-  @Column()
-  @Generated('uuid')
-  uuid: string;
-
-  @ApiProperty()
   @Column('varchar', { length: 255 })
   firstName: string;
 

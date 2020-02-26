@@ -1,5 +1,5 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
-import { User }                            from './user.entity';
+import { Injectable , BadRequestException , Inject } from '@nestjs/common';
+import { User }                                      from './user.entity';
 import { InjectRepository }                from '@nestjs/typeorm';
 import { EmailService }                    from '../_shared/services/email.service';
 import { Hash }                            from '../_shared/utils/hash';
@@ -7,17 +7,19 @@ import { AuthLoginDto }                    from '../auth/dto/auth-login.dto';
 import { Session }                         from '../_shared/utils/session';
 import { Serialize }                       from '../_shared/utils/serialize';
 import { LoggerService }                   from '../_shared/services/logger.service';
-import { UserRepository }                  from './user.repository';
+import { Repository }                      from 'typeorm';
 
 @Injectable()
 export class UserService {
+  private readonly userRepo: Repository<User>;
   constructor(
-    @InjectRepository(User)
-    private readonly userRepo: UserRepository,
+    @Inject('CONNECTION') connection,
     private readonly session: Session,
     private readonly serialize: Serialize,
     private readonly loggerService: LoggerService,
-  ) {}
+  ) {
+    this.userRepo = connection.getRepository(User);
+  }
 
   async find(): Promise<User[]> {
     return await this.userRepo.find();

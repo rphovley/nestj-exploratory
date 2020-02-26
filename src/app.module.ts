@@ -14,7 +14,12 @@ const modules: DynamicModule[] = LoadModules();
     ConfigModule.forRoot(),
     // Database Settings
     TypeOrmModule.forRootAsync({
-      useFactory: async () => ormconfig,
+      name: 'custom',
+      useFactory: async () => ormconfig[0] as any,
+    }),
+    TypeOrmModule.forRootAsync({
+      name: 'postgres',
+      useFactory: async () => ormconfig[1] as any,
     }),
     ...modules,
   ],

@@ -1,22 +1,23 @@
 import {
-  Controller,
-  Post,
-  HttpCode,
-  Body,
-  Get,
-  Param,
-  Patch,
-  BadRequestException,
-} from '@nestjs/common';
-import { BaseController } from '../_shared/controllers/base.controller';
-import { UserSaveDto } from './dto/user-save.dto';
-import { UserNewPasswordDto } from './dto/user-newpassword.dto';
-import { UserService } from './user.service';
-import { User } from './user.entity';
+  Controller ,
+  Post ,
+  HttpCode ,
+  Body ,
+  Get ,
+  Param ,
+  Patch ,
+  BadRequestException , Scope , Injectable ,
+}                                                     from '@nestjs/common';
+import { BaseController }                             from '../_shared/controllers/base.controller';
+import { UserSaveDto }                                from './dto/user-save.dto';
+import { UserNewPasswordDto }                         from './dto/user-newpassword.dto';
+import { UserService }                                from './user.service';
+import { User }                                       from './user.entity';
 import { ApiTags, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
 
 @ApiTags('User')
 @Controller('user')
+@Injectable({ scope: Scope.REQUEST })
 export class UserController extends BaseController {
   constructor(private userService: UserService) {
     super();
@@ -31,14 +32,10 @@ export class UserController extends BaseController {
   async create(@Body() data: UserSaveDto): Promise<User> {
     return await this.userService.create(data);
   }
-
-  @Get('confirmation/:code')
+  @Get()
   @HttpCode(200)
-  @ApiOkResponse({
-    description: 'The confirmation code is valid',
-  })
-  async confirmEmailAddress(@Param('code') code: string): Promise<boolean> {
-    return await this.userService.validateConfirmationToken(code);
+  async getAll(): Promise<User[]> {
+    return await this.userService.find();
   }
 
   @Patch('/:email/recover')

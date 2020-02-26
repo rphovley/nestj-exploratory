@@ -27,7 +27,6 @@ async function bootstrap() {
 
   // Logger
   app.useLogger(app.get(LoggerService));
-
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -51,22 +50,6 @@ async function bootstrap() {
   app.register(fastifyHelmet, { hidePoweredBy: true });
   app.register(fastifyCompress);
 
-  // Redis, Session and Cookies
-  const redisStoreInstance = connectRedis(fastifySession);
-  const redisCli = redis.createClient();
-  app.register(fastifyCookie);
-  app.register(fastifySession, {
-    secret: process.env.SESSION_SECRET,
-    store: new redisStoreInstance({
-      host: process.env.REDIS_HOST,
-      port: process.env.REDIS_PORT,
-      client: redisCli,
-      ttl: process.env.REDIS_TTL,
-    }),
-    cookie: {
-      secure: false,
-    },
-  });
 
   // Swagger
   const swaggerOptions = new DocumentBuilder()
